@@ -17,8 +17,14 @@ class TodoList extends Component {
     .then(res => {
       console.log(res.data);
       const data = res.data.subjects;
-      const subjects = Object.keys(data).map(function(key, index) {
-        return { key, text:data[key].text}
+      let subjects = Object.keys(data).map(function(key, index) {
+        return { key, text:data[key].text, date:data[key].date }
+      });
+
+      subjects.sort(function(a, b) {
+        a = new Date(a.date);
+        b = new Date(b.date);
+        return a>b ? -1 : a<b ? 1 : 0;
       });
 
       this.setState({items:subjects});
@@ -34,6 +40,7 @@ class TodoList extends Component {
     if (this._inputElement.value !== "") {
       var newItem = {
         text: this._inputElement.value,
+        date: new Date()
       };
    
       axios.post(this.query, newItem).then( (response) =>{
